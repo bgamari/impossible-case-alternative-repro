@@ -6,7 +6,7 @@ module Main
 
 import           Control.Applicative -- for GHC 7.8 compat
 import           System.Environment (getArgs)
-import           Module (JSON, liftNewStateT, runJSONParser, inside, earlyExit, Mytype(mytypeValue,mytypeValue2), Mytype2(mytype2Value), Notification(..), exitWith)
+import           Module
 import qualified Data.List.NonEmpty as NE
 
 import Debug.Trace
@@ -18,11 +18,22 @@ main = do
 fun1 :: JSON Mytype Float
 fun1 =
   do
-     ints <- liftNewStateT undefined fun2
+     ints <- liftNewStateT undefined fun2NoTH
 
      _ <- traceShow "before eval" $ error (show ints)
 
      undefined
+
+fun2NoTH :: JSON Mytype Int
+fun2NoTH = do
+  x <-  (\ m_aeOm -> do { newContext_aeOn <- fmap mytypeValue2 Module.getContext;
+                         Module.withCtx "mytypeValue2" (liftNewStateT newContext_aeOn m_aeOm) })
+
+        ((\ m_aeOv -> do { newContext_aeOw <- fmap mytype2Value Module.getContext;
+                          Module.withCtx "mytype2Value" (liftNewStateT newContext_aeOw m_aeOv) })
+
+         (exitWith Notification)) -- segfaults
+  return x
 
 fun2 :: JSON Mytype Int
 fun2 = do

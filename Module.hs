@@ -32,6 +32,8 @@ module Module
   , liftNewStateT
   , runJSONParser
   , inside
+  , getContext
+  , withCtx
   , earlyExit
   , exitWith
   , Mytype(mytypeValue,mytypeValue2)
