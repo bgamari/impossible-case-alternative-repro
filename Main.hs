@@ -1,8 +1,4 @@
-{-# LANGUAGE TemplateHaskell #-}
-
-module Main
-  ( main
-  ) where
+module Main ( main ) where
 
 import           Control.Applicative -- for GHC 7.8 compat
 import           Module

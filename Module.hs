@@ -1,5 +1,4 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE TemplateHaskell #-}
 
 -- | This module was derived from a real application that needs a custom JSON
 -- parser/validator based on `aeson`.
@@ -28,7 +27,6 @@ module Module
   , runJSONParser
   , getContext
   , withCtx
-  , inside
   , earlyExit
   , Mytype(..)
   ) where
@@ -61,18 +59,6 @@ pushStack :: String -> [String] -> [String]
 pushStack x xs = x : xs -- Impossible case alternative
 -- pushStack x xs =      xs -- No Impossible case alternative (not pushing () makes the error go away)
 
-
--- Uses TH to build an expression of type:
---   $(inside 'recordField) :: JSON (recordField record) b -> JSON record b
--- For example:
---   $(inside 'mytypeValue) :: JSON Double b -> JSON Mytype b
-inside :: Name -> Q Exp
-inside recordField =
-  do VarI _ (AppT (AppT ArrowT (ConT _ty)) _) _ _ <- reify recordField
-     let field = stringE (nameBase recordField)
-     [|\m ->
-         do newContext <- fmap $(varE recordField) getContext
-            withCtx $field (liftNewStateT newContext m) |]
 
 getContext :: JSON context context
 getContext = JSON (EitherT (StateT (\s -> return (Right (jsonContext s),s))))
