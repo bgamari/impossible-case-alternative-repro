@@ -26,6 +26,8 @@ module Module
   ( JSON(..)
   , liftNewStateT
   , runJSONParser
+  , getContext
+  , withCtx
   , inside
   , earlyExit
   , Mytype(..)

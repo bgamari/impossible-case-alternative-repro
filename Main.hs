@@ -5,7 +5,7 @@ module Main
   ) where
 
 import           Control.Applicative -- for GHC 7.8 compat
-import           Module (JSON, liftNewStateT, runJSONParser, inside, earlyExit, Mytype(mytypeValue))
+import           Module
 
 
 main :: IO ()
@@ -19,7 +19,11 @@ fun1 = do
 fun2 :: JSON Mytype (Int,())
 fun2 =
   do
-     x <- $(inside 'mytypeValue)
+     x <-
+      (\ m_ahgk
+      -> do { newContext_ahgl <- fmap mytypeValue Module.getContext;
+              Module.withCtx
+                "mytypeValue" (liftNewStateT newContext_ahgl m_ahgk) })
       ((
 
        -- Impossible case alternative
